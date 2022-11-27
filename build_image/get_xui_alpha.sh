@@ -75,7 +75,7 @@ install_x-ui() {
         exit 1
     fi
     echo -e "x-ui version: ${last_version}, start installation"
-    wget -N --no-check-certificate \
+    wget -q -N --no-check-certificate \
         -O x-ui-linux-${arch}.tar.gz \
         https://github.com/FranzKafkaYu/x-ui/releases/download/"${last_version}"/x-ui-linux-${arch}-english.tar.gz
     if [[ $? -ne 0 ]]; then

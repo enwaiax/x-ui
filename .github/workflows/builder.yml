@@ -62,6 +62,8 @@ jobs:
           tags: |
             ${{ steps.dockerhub_image.outputs.lowercase }}:latest
             ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build and push with alpha tag
         uses: docker/build-push-action@v3
@@ -73,8 +75,5 @@ jobs:
           tags: |
             ${{ steps.dockerhub_image.outputs.lowercase }}:alpha
             ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:alpha
-
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
