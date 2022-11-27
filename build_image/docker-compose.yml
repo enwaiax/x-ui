@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  xui:
+    build:
+      context: .
+      dockerfile: Dockerfile.alpha
+    image: enwaiax/xui
+    container_name: xui
+    restart: unless-stopped
+    network_mode: host
