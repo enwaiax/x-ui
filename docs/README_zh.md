@@ -1,46 +1,44 @@
 # x-ui docker image
 
-[English](README.md) | [中文文档](./docs/README_zh.md)
+> x-ui docker 版本
 
-> x-ui in docker version
-
-You could selecet your perfer one by changing the docker image tag
+可以通过使用不同的`tag`来使用不同作者的镜像
 
 |                                                           | Tag    | amd64 | arm64 | armv7 | armv6 | s390x |
 | --------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- | ----- |
 | [vaxilu/x-ui](https://github.com/vaxilu/x-ui)             | latest | ✅    | ✅    | ✅    | ✅    | ✅    |
 | [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui) | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
 
-### Why Should You Use Docker
+### 为什么要使用`docker`
 
-- Consistent & Isolated Environment
-- Rapid Application Deployment
-- Ensures Scalability & Flexibility
-- Better Portability
-- Cost-Effective
-- In-Built Version Control System
-- Security
+- 一致性且能保证环境隔离
+- 快速部署
+- 保证灵活性和扩展性
+- 更好的可移植性
+- 低成本
+- 方便控制版本
+- 安全
 - .....
 
-### For this project, if you use docker
+### 对于 x-ui，如果使用 docker
 
-- You don't need to concern yourself with operating systems, architectures and other issues.
-- You will never ruin your Linux server. If you don't want to use it, you can stop or remove it from your environment exactly.
-- Last but not least, you can easily deploy and upgrade
+- 无需关心原宿主机的系统，架构，版本
+- 不会破坏原系统，如果不想使用，很方便就能完全干净的卸载
+- 部署方便且容易升级
 
-### Hot to use it
+### 如何使用
 
-#### Pre-condition, Docker is installed
+#### 前提：安装好 docker
 
-Use the official one-key script
+使用官方一键脚本
 
 ```bash
 curl -sSL https://get.docker.com/ | sh
 ```
 
-#### Start you container
+#### 运行你的容器
 
-##### You could use the pre-build docker image enwaiax/xuiplus
+##### 使用 [vaxilu/x-ui](https://github.com/vaxilu/x-ui) 版本的
 
 ```
 mkdir x-ui && cd x-ui
@@ -51,9 +49,9 @@ docker run -itd --network=host \
     enwaiax/x-ui
 ```
 
-Note: If you want to use [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui), change the image as `enwaiax/x-ui:alpha`
+注意: 如果希望使用[FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)版本，仅需要讲上述镜像修改为 `enwaiax/x-ui:alpha`
 
-##### Or you could use docker compose to start it
+##### 使用 docker-compose 运行
 
 ```
 mkdir x-ui && cd x-ui
@@ -61,32 +59,34 @@ wget https://raw.githubusercontent.com//chasing66/x-ui/main/docker-compose.yml
 docker compose up -d
 ```
 
-#### How to enable ssl to your x-ui panel
+#### 如何启用 ssl
 
-This part describe how to enable ssl.
-
-- Suppose your x-ui port is `54321`
-- Suppose your IP is `10.10.10.10`
-- Suppose your domain is `xui.example.com` and you have set the A recode in cloudflare
-- Suppose you are using Debian 10+ or Ubuntu 18+ system
-- Suppose your email is `xxxx@example.com`
+- 假设你的 x-ui 端口是 `54321`
+- 假设你的 IP 是 `10.10.10.10`
+- 假设你的域名是 `xui.example.com`，且已经做好 A 记录解析
+- 假设你使用的是 Debian 10+或者 Ubuntu 18+的系统
+- 假设你的邮箱是 `xxxx@example.com`
 
 ##### Steps as below
 
-1. Install nginx and python3-certbot-nginx
+1. 安装必要软件
 
 ```bash
 sudo apt update
-sudo apt install python3-certbot-nginx
+sudo apt install snapd nginx
+sudo snap install core
+sudo snap refresh core
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ```
 
-2. Add new nging configurtion
+1. 新加 nginx 配置
 
 ```
 touch /etc/nginx/conf.d/xui.conf
 ```
 
-Add below to the file. Adjust appropriately to your own situation.
+增加以下配置，按照实际情况调整
 
 ```nginx
 server {
@@ -101,7 +101,7 @@ server {
         proxy_set_header Host $host;
     }
 
-    # This part desribe how to reverse websockt proxy
+    # 反代websocket
      location /xray {
          proxy_redirect off;
          proxy_pass http://127.0.0.1:10001;
@@ -116,27 +116,27 @@ server {
 }
 ```
 
-1. Check yout conf is OK
+1. 检查配置是否正常
 
 ```
 nginx -t
 ```
 
-2. Get cert
+2. 申请证书，按照提示一步一步执行
 
 ```
 certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
 ```
 
-For more details, refer to [cerbot](https://certbot.eff.org/)
+更多细节可以参考 [cerbot](https://certbot.eff.org/)
 
-3. Reload nginx config
+3. 刷新 nginx 配置生效
 
 ```
 ngins -s reload
 ```
 
-4. Test automatic renewal
+4. 配置定时任务
 
 ```
 sudo certbot renew --dry-run
