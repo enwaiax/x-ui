@@ -67,7 +67,7 @@ docker compose up -d
 - 假设你使用的是 Debian 10+或者 Ubuntu 18+的系统
 - 假设你的邮箱是 `xxxx@example.com`
 
-##### Steps as below
+##### 步骤如下
 
 1. 安装必要软件
 
@@ -80,7 +80,7 @@ sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ```
 
-1. 新加 nginx 配置
+2. 新建一个 nginx 配置
 
 ```
 touch /etc/nginx/conf.d/xui.conf
@@ -116,13 +116,13 @@ server {
 }
 ```
 
-1. 检查配置是否正常
+3. 检查配置是否正常
 
 ```
 nginx -t
 ```
 
-2. 申请证书，按照提示一步一步执行
+4. 申请证书，按照提示一步一步执行
 
 ```
 certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
@@ -130,13 +130,13 @@ certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
 
 更多细节可以参考 [cerbot](https://certbot.eff.org/)
 
-3. 刷新 nginx 配置生效
+5. 刷新 nginx 配置生效
 
 ```
 ngins -s reload
 ```
 
-4. 配置定时任务
+6. 配置定时任务
 
 ```
 sudo certbot renew --dry-run

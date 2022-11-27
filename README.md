@@ -116,13 +116,13 @@ server {
 }
 ```
 
-1. Check yout conf is OK
+3. Check yout conf is OK
 
 ```
 nginx -t
 ```
 
-2. Get cert
+4. Get cert
 
 ```
 certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
@@ -130,13 +130,13 @@ certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
 
 For more details, refer to [cerbot](https://certbot.eff.org/)
 
-3. Reload nginx config
+5. Reload nginx config
 
 ```
 ngins -s reload
 ```
 
-4. Test automatic renewal
+6. Test automatic renewal
 
 ```
 sudo certbot renew --dry-run

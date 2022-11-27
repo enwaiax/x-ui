@@ -56,7 +56,7 @@ jobs:
       - name: Build and push with latest tag
         uses: docker/build-push-action@v3
         with:
-          build-contexts: build_image
+          context: build_image
           platforms: linux/amd64,linux/arm64,linux/s390x,linux/arm/v6,linux/arm/v7
           push: true
           tags: |
@@ -66,8 +66,8 @@ jobs:
       - name: Build and push with alpha tag
         uses: docker/build-push-action@v3
         with:
-          build-contexts: build_image
-          file: Dockerfile.alpha
+          context: build_image
+          file: ./build_image/Dockerfile.alpha
           platforms: linux/amd64,linux/arm64,linux/s390x
           push: true
           tags: |
