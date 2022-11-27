@@ -43,12 +43,6 @@ fi
 
 echo "Your CPU arch: ${arch}"
 
-if [ "$(getconf WORD_BIT)" != '32' ] && [ "$(getconf LONG_BIT)" != '64' ]; then
-    echo "This software does not support 32-bit system (x86), please use 64-bit system (x86_64), if the detection is wrong, please contact the author"
-    exit 1
-fi
-
-
 # os version
 if [[ -f /etc/os-release ]]; then
     os_version=$(awk -F'[= ."]' '/VERSION_ID/{print $3}' /etc/os-release)
@@ -74,14 +68,16 @@ fi
 install_x-ui() {
     mkdir -p /go
     cd /go || exit
-    last_version=$(curl -Ls "https://api.github.com/repos/FranzKafkaYu/x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-    last_version=$(curl -Ls "https://api.github.com/repos/FranzKafkaYu/x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+    last_version=$(curl -Ls "https://api.github.com/repos/FranzKafkaYu/x-ui/releases/latest" \
+        | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
     if [[ -z "$last_version" ]]; then
         echo -e "${red}GitHub API limitation, please try it later${plain}"
         exit 1
     fi
     echo -e "x-ui version: ${last_version}, start installation"
-    wget -N --no-check-certificate -O x-ui-linux-${arch}.tar.gz https://github.com/FranzKafkaYu/x-ui/releases/download/"${last_version}"/x-ui-linux-${arch}.tar.gz
+    wget -N --no-check-certificate \
+        -O x-ui-linux-${arch}.tar.gz \
+        https://github.com/FranzKafkaYu/x-ui/releases/download/"${last_version}"/x-ui-linux-${arch}-english.tar.gz
     if [[ $? -ne 0 ]]; then
         echo -e "${red}Failed to download x-ui${plain}"
         exit 1
