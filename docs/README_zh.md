@@ -12,11 +12,11 @@
 
 可以通过使用不同的`tag`来使用不同作者的镜像
 
-|                                                           | Tag    | amd64 | arm64 | armv7 | armv6 | s390x |
-| --------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- | ----- |
-| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)             | latest | ✅    | ✅    | ✅    | ✅    | ✅    |
-| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui) | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
-| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial)| alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
+|                                                            | Tag    | amd64 | arm64 | armv7 | armv6 | s390x |
+| ---------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- | ----- |
+| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)              | latest | ✅    | ✅    | ✅    | ✅    | ✅    |
+| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)  | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
+| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | beta   | ✅    | ✅    | ❌    | ❌    | ✅    |
 
 ### 为什么要使用`docker`
 

@@ -18,7 +18,7 @@ You could selecet your perfer one by changing the docker image tag
 | ---------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- | ----- |
 | [vaxilu/x-ui](https://github.com/vaxilu/x-ui)              | latest | ✅    | ✅    | ✅    | ✅    | ✅    |
 | [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)  | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
-| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
+| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | beta   | ✅    | ✅    | ❌    | ❌    | ✅    |
 
 ### Why Should You Use Docker
 
