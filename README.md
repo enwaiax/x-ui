@@ -1,15 +1,24 @@
 # x-ui docker image
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/chasing66/x-ui/builder)
+![Docker Pulls](https://img.shields.io/docker/pulls/enwaiax/x-ui)
+![GitHub contributors](https://img.shields.io/github/contributors/chasing66/x-ui)
+![GitHub forks](https://img.shields.io/github/forks/chasing66/x-ui)
+![GitHub Repo stars](https://img.shields.io/github/stars/chasing66/x-ui)
+![GitHub issues](https://img.shields.io/github/issues/chasing66/x-ui)
+![GitHub](https://img.shields.io/github/license/chasing66/x-ui)
+
 [English](README.md) | [中文文档](./docs/README_zh.md)
 
 > x-ui in docker version
 
 You could selecet your perfer one by changing the docker image tag
 
-|                                                           | Tag    | amd64 | arm64 | armv7 | armv6 | s390x |
-| --------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- | ----- |
-| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)             | latest | ✅    | ✅    | ✅    | ✅    | ✅    |
-| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui) | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
+|                                                            | Tag    | amd64 | arm64 | armv7 | armv6 | s390x |
+| ---------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- | ----- |
+| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)              | latest | ✅    | ✅    | ✅    | ✅    | ✅    |
+| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)  | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
+| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
 
 ### Why Should You Use Docker
 

@@ -1,9 +1,6 @@
 name: builder
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - "main"
 
 jobs:
   buildx:
@@ -75,5 +72,18 @@ jobs:
           tags: |
             ${{ steps.dockerhub_image.outputs.lowercase }}:alpha
             ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:alpha
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push with beta tag
+        uses: docker/build-push-action@v3
+        with:
+          context: build_image
+          file: ./build_image/Dockerfile.beta
+          platforms: linux/amd64,linux/arm64,linux/s390x
+          push: true
+          tags: |
+            ${{ steps.dockerhub_image.outputs.lowercase }}:beta
+            ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:beta
           cache-from: type=gha
           cache-to: type=gha,mode=max

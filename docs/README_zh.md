@@ -1,5 +1,13 @@
 # x-ui docker image
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/chasing66/x-ui/builder)
+![Docker Pulls](https://img.shields.io/docker/pulls/enwaiax/x-ui)
+![GitHub contributors](https://img.shields.io/github/contributors/chasing66/x-ui)
+![GitHub forks](https://img.shields.io/github/forks/chasing66/x-ui)
+![GitHub Repo stars](https://img.shields.io/github/stars/chasing66/x-ui)
+![GitHub issues](https://img.shields.io/github/issues/chasing66/x-ui)
+![GitHub](https://img.shields.io/github/license/chasing66/x-ui)
+
 > x-ui docker 版本
 
 可以通过使用不同的`tag`来使用不同作者的镜像
@@ -8,6 +16,7 @@
 | --------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- | ----- |
 | [vaxilu/x-ui](https://github.com/vaxilu/x-ui)             | latest | ✅    | ✅    | ✅    | ✅    | ✅    |
 | [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui) | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
+| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial)| alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
 
 ### 为什么要使用`docker`
 
@@ -122,7 +131,7 @@ server {
 nginx -t
 ```
 
-4. 申请证书，按照提示一步一步执行
+4. 申请证书，按照提示设置
 
 ```
 certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
