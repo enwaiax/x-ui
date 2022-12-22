@@ -1,4 +1,4 @@
-name: builder
+name: builder unofficial
 on:
   workflow_dispatch:
 
@@ -49,18 +49,6 @@ jobs:
         uses: ASzc/change-string-case-action@v5
         with:
           string: ${{ github.repository }}
-
-      - name: Build and push with latest tag
-        uses: docker/build-push-action@v3
-        with:
-          context: build_image
-          platforms: linux/amd64,linux/arm64,linux/s390x,linux/arm/v6,linux/arm/v7
-          push: true
-          tags: |
-            ${{ steps.dockerhub_image.outputs.lowercase }}:latest
-            ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Build and push with alpha tag
         uses: docker/build-push-action@v3

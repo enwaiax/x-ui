@@ -1,22 +1,36 @@
 # x-ui docker image
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/chasing66/x-ui/builder)
-![Docker Pulls](https://img.shields.io/docker/pulls/enwaiax/x-ui)
-![GitHub contributors](https://img.shields.io/github/contributors/chasing66/x-ui)
-![GitHub forks](https://img.shields.io/github/forks/chasing66/x-ui)
-![GitHub Repo stars](https://img.shields.io/github/stars/chasing66/x-ui)
-![GitHub issues](https://img.shields.io/github/issues/chasing66/x-ui)
-![GitHub](https://img.shields.io/github/license/chasing66/x-ui)
+<!-- PROJECT SHIELDS -->
+
+[![Docker Pulls][docker-pulls-shield]][docker-pulls-url]
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/enwaiax/x-ui.svg?style=flat-square
+[docker-pulls-url]: https://hub.docker.com/r/enwaiax/x-ui
+[contributors-shield]: https://img.shields.io/github/contributors/chasing66/x-ui.svg?style=flat-square
+[contributors-url]: https://github.com/Chasing66/x-ui/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/chasing66/x-ui.svg?style=flat-square
+[forks-url]: https://github.com/Chasing66/x-ui/network/members
+[stars-shield]: https://img.shields.io/github/stars/chasing66/x-ui.svg?style=flat-square
+[stars-url]: https://github.com/Chasing66/x-ui/stargazers
+[issues-shield]: https://img.shields.io/github/issues/chasing66/x-ui.svg?style=flat-square
+[issues-url]: https://github.com/Chasing66/x-ui/issues
+[license-shield]: https://img.shields.io/github/license/Chasing66/x-ui.svg?style=flat-square
+[license-url]: https://github.com/Chasing66/x-ui/blob/main/LICENSE
 
 > x-ui docker 版本
 
 可以通过使用不同的`tag`来使用不同作者的镜像
 
-|                                                            | Tag    | amd64 | arm64 | armv7 | armv6 | s390x |
-| ---------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- | ----- |
-| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)              | latest | ✅    | ✅    | ✅    | ✅    | ✅    |
-| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)  | alpha  | ✅    | ✅    | ❌    | ❌    | ✅    |
-| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | beta   | ✅    | ✅    | ❌    | ❌    | ✅    |
+|                                                            | Tag    | amd64 | arm64 | armv7 | s390x |
+| ---------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- |
+| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)              | latest | ✅    | ✅    | ✅    | ✅    |
+| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)  | alpha  | ✅    | ✅    | ❌    | ✅    |
+| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | beta   | ✅    | ✅    | ❌    | ✅    |
 
 ### 为什么要使用`docker`
 
