@@ -51,7 +51,7 @@ jobs:
           string: ${{ github.repository }}
 
       - name: Build and push with alpha tag
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: build_image
           file: ./build_image/Dockerfile.alpha
@@ -64,7 +64,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and push with beta tag
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: build_image
           file: ./build_image/Dockerfile.beta
