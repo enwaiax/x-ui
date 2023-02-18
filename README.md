@@ -156,7 +156,7 @@ For more details, refer to [cerbot](https://certbot.eff.org/)
 5. Reload nginx config
 
 ```
-ngins -s reload
+nginx -s reload
 ```
 
 6. Test automatic renewal
