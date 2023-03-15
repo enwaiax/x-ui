@@ -164,3 +164,9 @@ nginx -s reload
 ```
 sudo certbot renew --dry-run
 ```
+
+Note: Default credentials
+
+Username: `admin`
+
+Password: `admin`
