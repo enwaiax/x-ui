@@ -80,7 +80,7 @@ Note: If you want to use [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-u
 
 ```
 mkdir x-ui && cd x-ui
-wget https://raw.githubusercontent.com//chasing66/x-ui/main/docker-compose.yml
+wget https://raw.githubusercontent.com/chasing66/x-ui/main/docker-compose.yml
 docker compose up -d
 ```
 
