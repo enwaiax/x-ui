@@ -1,5 +1,5 @@
 FROM golang:latest AS builder
-COPY get_xui_beta.sh get_xui.sh
+COPY get_xui_alpha_zh.sh get_xui.sh
 RUN bash get_xui.sh
 
 FROM debian:11-slim
@@ -12,7 +12,7 @@ RUN apt-get update \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ARG TARGETARCH
-COPY --from=builder /go/x-ui/bin/xray-linux-${TARGETARCH} /usr/local/bin/bin/xray-linux-${TARGETARCH}
+COPY --from=teddysun/xray /usr/bin/xray /usr/local/bin/bin/xray-linux-${TARGETARCH}
 COPY --from=teddysun/xray /usr/share/xray/ /usr/local/bin/bin/
 
 VOLUME [ "/etc/x-ui" ]

@@ -63,6 +63,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Build and push with alpha-zh tag
+        uses: docker/build-push-action@v4
+        with:
+          context: build_image
+          file: ./build_image/Dockerfile.alpha-zh
+          platforms: linux/amd64,linux/arm64,linux/s390x
+          push: true
+          tags: |
+            ${{ steps.dockerhub_image.outputs.lowercase }}:alpha-zh
+            ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:alpha-zh
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
       - name: Build and push with beta tag
         uses: docker/build-push-action@v4
         with:

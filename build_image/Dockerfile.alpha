@@ -1,6 +1,6 @@
 FROM golang:latest AS builder
-COPY get_xui_alpha.sh .
-RUN bash get_xui_alpha.sh
+COPY get_xui_alpha.sh get_xui.sh
+RUN bash get_xui.sh
 
 FROM debian:11-slim
 LABEL org.opencontainers.image.authors="https://github.com/Chasing66"

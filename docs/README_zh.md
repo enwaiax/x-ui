@@ -26,11 +26,11 @@
 
 可以通过使用不同的`tag`来使用不同作者的镜像
 
-|                                                            | Tag    | amd64 | arm64 | armv7 | s390x |
-| ---------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- |
-| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)              | latest | ✅    | ✅    | ✅    | ✅    |
-| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)  | alpha  | ✅    | ✅    | ❌    | ✅    |
-| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | beta   | ✅    | ✅    | ❌    | ✅    |
+|                                                            | Tag      | amd64 | arm64 | armv7 | s390x |
+| ---------------------------------------------------------- | -------- | ----- | ----- | ----- | ----- |
+| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)              | latest   | ✅    | ✅    | ✅    | ✅    |
+| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)  | alpha-zh | ✅    | ✅    | ❌    | ✅    |
+| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | beta     | ✅    | ✅    | ❌    | ✅    |
 
 ### 为什么要使用`docker`
 
@@ -72,7 +72,7 @@ docker run -itd --network=host \
     enwaiax/x-ui
 ```
 
-注意: 如果希望使用[FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)版本，仅需要讲上述镜像修改为 `enwaiax/x-ui:alpha`
+注意: 如果希望使用[FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)版本，仅需要讲上述镜像修改为 `enwaiax/x-ui:alpha-zh`
 
 ##### 使用 docker-compose 运行
 

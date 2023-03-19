@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.alpha
-    image: enwaiax/xui
+    image: enwaiax/x-ui
     container_name: xui
     restart: unless-stopped
     network_mode: host
