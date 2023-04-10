@@ -60,8 +60,8 @@ jobs:
           tags: |
             ${{ steps.dockerhub_image.outputs.lowercase }}:alpha
             ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:alpha
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
       - name: Build and push with alpha-zh tag
         uses: docker/build-push-action@v4
@@ -73,18 +73,31 @@ jobs:
           tags: |
             ${{ steps.dockerhub_image.outputs.lowercase }}:alpha-zh
             ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:alpha-zh
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
-      - name: Build and push with beta tag
-        uses: docker/build-push-action@v4
+      # - name: Build and push with beta tag
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     context: build_image
+      #     file: ./build_image/Dockerfile.beta
+      #     platforms: linux/amd64,linux/arm64,linux/s390x
+      #     push: true
+      #     tags: |
+      #       ${{ steps.dockerhub_image.outputs.lowercase }}:beta
+      #       ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:beta
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+
+      - name: Sync README.md
+        uses: ms-jpq/sync-dockerhub-readme@v1
         with:
-          context: build_image
-          file: ./build_image/Dockerfile.beta
-          platforms: linux/amd64,linux/arm64,linux/s390x
-          push: true
-          tags: |
-            ${{ steps.dockerhub_image.outputs.lowercase }}:beta
-            ghcr.io/${{ steps.ghcr_image.outputs.lowercase }}:beta
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
+          readme: "./docs/README_zh.md"
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
