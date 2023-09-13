@@ -51,7 +51,7 @@ jobs:
           string: ${{ github.repository }}
 
       - name: Build and push with latest tag
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: build_image
           platforms: linux/amd64,linux/arm64,linux/s390x,linux/arm/v7
