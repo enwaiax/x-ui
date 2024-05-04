@@ -40,13 +40,13 @@ jobs:
 
       - name: Lower case dockerhub image name
         id: dockerhub_image
-        uses: ASzc/change-string-case-action@v5
+        uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
 
       - name: Lower case github docker image name
         id: ghcr_image
-        uses: ASzc/change-string-case-action@v5
+        uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ github.repository }}
 
