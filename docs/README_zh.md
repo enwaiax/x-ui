@@ -22,95 +22,92 @@
 [license-shield]: https://img.shields.io/github/license/enwaiax/x-ui.svg?style=flat-square
 [license-url]: https://github.com/enwaiax/x-ui/blob/main/LICENSE
 
-> x-ui docker 版本
+[English](../README.md) | [中文文档](./README_zh.md)
 
-可以通过使用不同的`tag`来使用不同作者的镜像
+[MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui) 的精简 Docker 镜像。
 
-|                                                            | Tag      | amd64 | arm64 | armv7 | s390x |
-| ---------------------------------------------------------- | -------- | ----- | ----- | ----- | ----- |
-| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)              | latest   | ✅    | ✅    | ✅    | ✅    |
-| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)  | alpha-zh | ✅    | ✅    | ❌    | ✅    |
-| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | beta     | ✅    | ✅    | ❌    | ✅    |
-| [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui)        | 3x-ui    | ✅    | ✅    | ✅    | ✅    |
+| Tag | 上游 | 状态 |
+| --- | --- | --- |
+| `3x-ui`、`latest`、`v3.6.0` | [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui) | 持续构建 |
+| `alpha`、`alpha-zh` | [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui) | 已废弃，不再构建 |
+| `beta` | [X-UI-Unofficial](https://github.com/X-UI-Unofficial) | 已废弃，不再构建 |
+| 旧 `latest`（vaxilu） | [vaxilu/x-ui](https://github.com/vaxilu/x-ui) | 已废弃；现在的 `latest` 指向 3x-ui |
 
-### 为什么要使用`docker`
+支持架构：`amd64`、`arm64`、`arm/v7`、`s390x`。
 
-- 一致性且能保证环境隔离
-- 快速部署
-- 保证灵活性和扩展性
-- 更好的可移植性
-- 低成本
-- 方便控制版本
-- 安全
-- .....
+镜像比官方 `ghcr.io/mhsanaei/3x-ui` 更小：不含 fail2ban、`x-ui.sh` 和额外的伊朗/俄罗斯 geo 数据。已内置 `acme.sh`，请把 `/root/.acme.sh` 和 `/root/cert` 做成卷，续期才能在重建容器后还在。
 
-### 对于 x-ui，如果使用 docker
-
-- 无需关心原宿主机的系统，架构，版本
-- 不会破坏原系统，如果不想使用，很方便就能完全干净的卸载
-- 部署方便且容易升级
+构建怎么瘦、用了哪些 BuildKit 语法、故意没打进去的东西，见 [image-build.zh.md](image-build.zh.md)。
 
 ### 如何使用
 
-#### 前提：安装好 docker
-
-使用官方一键脚本
+安装 Docker：
 
 ```bash
 curl -sSL https://get.docker.com/ | sh
 ```
 
-#### 运行你的容器
+#### docker run
 
-##### 使用 [vaxilu/x-ui](https://github.com/vaxilu/x-ui) 版本的
-
-```
+```bash
 mkdir x-ui && cd x-ui
 docker run -itd --network=host \
+    -e XRAY_VMESS_AEAD_FORCED=false \
     -v $PWD/db/:/etc/x-ui/ \
     -v $PWD/cert/:/root/cert/ \
+    -v $PWD/acme/:/root/.acme.sh/ \
     --name x-ui --restart=unless-stopped \
-    enwaiax/x-ui
+    enwaiax/x-ui:3x-ui
 ```
 
-注意: 如果希望使用[FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)版本，仅需要讲上述镜像修改为 `enwaiax/x-ui:alpha-zh`
+面板默认端口是 `2053`。首次启动账号密码是 `admin` / `admin`，登录后请立刻改掉。
 
-##### 使用 docker-compose 运行
-
+```bash
+docker exec x-ui x-ui setting -show true
 ```
+
+#### docker compose
+
+```bash
 mkdir x-ui && cd x-ui
-wget https://raw.githubusercontent.com//enwaiax/x-ui/main/docker-compose.yml
+wget https://raw.githubusercontent.com/enwaiax/x-ui/main/docker-compose.yml
 docker compose up -d
 ```
 
-#### 如何启用 ssl
+#### 在容器内申请证书
 
-- 假设你的 x-ui 端口是 `54321`
-- 假设你的 IP 是 `10.10.10.10`
-- 假设你的域名是 `xui.example.com`，且已经做好 A 记录解析
-- 假设你使用的是 Debian 10+或者 Ubuntu 18+的系统
-- 假设你的邮箱是 `xxxx@example.com`
+需要 `network_mode: host`，standalone HTTP-01 才能占用 80 端口。
 
-##### 步骤如下
+```bash
+docker exec -it x-ui acme.sh --issue -d xui.example.com --standalone --httpport 80
+docker exec -it x-ui acme.sh --installcert -d xui.example.com \
+    --fullchain-file /root/cert/xui.example.com/fullchain.pem \
+    --key-file /root/cert/xui.example.com/privkey.pem \
+    --reloadcmd "x-ui restart"
+docker exec x-ui x-ui cert \
+    -webCert /root/cert/xui.example.com/fullchain.pem \
+    -webCertKey /root/cert/xui.example.com/privkey.pem
+```
 
-1. 安装必要软件
+首次启动后 `acme.sh` 在 `/root/.acme.sh/acme.sh`。不在 `PATH` 里就用这个路径。
+
+#### 用宿主机 nginx 反代 SSL
+
+假设：
+
+- 面板端口是 `2053`
+- 域名 `xui.example.com` 已做好 A 记录
+- Debian 12+ 或 Ubuntu 22+
+- 邮箱是 `xxxx@example.com`
+
+1. 安装 nginx 和 certbot
 
 ```bash
 sudo apt update
-sudo apt install snapd nginx
-sudo snap install core
-sudo snap refresh core
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
+sudo apt install nginx python3-certbot-nginx
 ```
 
-2. 新建一个 nginx 配置
-
-```
-touch /etc/nginx/conf.d/xui.conf
-```
-
-增加以下配置，按照实际情况调整
+2. 新建 `/etc/nginx/conf.d/xui.conf`
 
 ```nginx
 server {
@@ -120,48 +117,32 @@ server {
 
     location / {
         proxy_redirect off;
-        proxy_pass http://127.0.0.1:54321;
+        proxy_pass http://127.0.0.1:2053;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
     }
 
-    # 反代websocket
-     location /xray {
-         proxy_redirect off;
-         proxy_pass http://127.0.0.1:10001;
-         proxy_http_version 1.1;
-         proxy_set_header Upgrade $http_upgrade;
-         proxy_set_header Connection "upgrade";
-         proxy_set_header X-Real-IP $remote_addr;
-         proxy_set_header Host $http_host;
-         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-         proxy_set_header Y-Real-IP $realip_remote_addr;
-     }
+    location /xray {
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:10001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Y-Real-IP $realip_remote_addr;
+    }
 }
 ```
 
-3. 检查配置是否正常
+3. 检查配置、申请证书并重载
 
-```
-nginx -t
-```
-
-4. 申请证书，按照提示设置
-
-```
-certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
-```
-
-更多细节可以参考 [cerbot](https://certbot.eff.org/)
-
-5. 刷新 nginx 配置生效
-
-```
-ngins -s reload
-```
-
-6. 配置定时任务
-
-```
+```bash
+sudo nginx -t
+sudo certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
+sudo nginx -s reload
 sudo certbot renew --dry-run
 ```
+
+更多细节见 [certbot](https://certbot.eff.org/)

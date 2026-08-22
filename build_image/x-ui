@@ -1,0 +1,10 @@
+#!/bin/sh
+# Thin wrapper so acme.sh --reloadcmd "x-ui restart" and CLI calls work.
+case "${1:-}" in
+restart)
+	kill -HUP 1
+	;;
+*)
+	exec /app/x-ui "$@"
+	;;
+esac
