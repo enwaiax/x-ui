@@ -1,9 +1,12 @@
 services:
   xui:
-    image: enwaiax/x-ui
+    image: enwaiax/x-ui:3x-ui
     container_name: xui
+    environment:
+      XRAY_VMESS_AEAD_FORCED: "false"
     volumes:
       - $PWD/db/:/etc/x-ui/
       - $PWD/cert/:/root/cert/
+      - $PWD/acme/:/root/.acme.sh/
     restart: unless-stopped
     network_mode: host

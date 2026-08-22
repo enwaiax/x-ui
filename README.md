@@ -24,93 +24,90 @@
 
 [English](README.md) | [中文文档](./docs/README_zh.md)
 
-> x-ui in docker version
+Minimal Docker image for [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui).
 
-You could selecet your perfer one by changing the docker image tag
+| Tag | Upstream | Status |
+| --- | --- | --- |
+| `3x-ui`, `latest`, `v3.6.0` | [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui) | Built |
+| `alpha`, `alpha-zh` | [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui) | Deprecated, no longer built |
+| `beta` | [X-UI-Unofficial](https://github.com/X-UI-Unofficial) | Deprecated, no longer built |
+| old `latest` (vaxilu) | [vaxilu/x-ui](https://github.com/vaxilu/x-ui) | Deprecated; `latest` now tracks 3x-ui |
 
-|                                                            | Tag    | amd64 | arm64 | armv7 | s390x |
-| ---------------------------------------------------------- | ------ | ----- | ----- | ----- | ----- |
-| [vaxilu/x-ui](https://github.com/vaxilu/x-ui)              | latest | ✅    | ✅    | ✅    | ✅    |
-| [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui)  | alpha  | ✅    | ✅    | ❌    | ✅    |
-| [X-UI-Unofficial/x-ui](https://github.com/X-UI-Unofficial) | beta   | ✅    | ✅    | ❌    | ✅    |
-| [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui)        | 3x-ui  | ✅    | ✅    | ✅    | ✅    |
+Supported architectures: `amd64`, `arm64`, `arm/v7`, `s390x`.
 
-### Why Should You Use Docker
+This image is smaller than the official `ghcr.io/mhsanaei/3x-ui` image. It omits fail2ban, `x-ui.sh`, and extra IR/RU geo files. `acme.sh` is bundled; persist `/root/.acme.sh` and `/root/cert` so renewals survive recreation.
 
-- Consistent & Isolated Environment
-- Rapid Application Deployment
-- Ensures Scalability & Flexibility
-- Better Portability
-- Cost-Effective
-- In-Built Version Control System
-- Security
-- .....
+How the image is built, which BuildKit syntax we use, and what we left out: [docs/image-build.md](docs/image-build.md) ([中文](docs/image-build.zh.md)).
 
-### For this project, if you use docker
+### How to use it
 
-- You don't need to concern yourself with operating systems, architectures and other issues.
-- You will never ruin your Linux server. If you don't want to use it, you can stop or remove it from your environment exactly.
-- Last but not least, you can easily deploy and upgrade
-
-### Hot to use it
-
-#### Pre-condition, Docker is installed
-
-Use the official one-key script
+Install Docker:
 
 ```bash
 curl -sSL https://get.docker.com/ | sh
 ```
 
-#### Start you container
+#### docker run
 
-##### You could use the pre-build docker image enwaiax/xuiplus
-
-```
+```bash
 mkdir x-ui && cd x-ui
 docker run -itd --network=host \
+    -e XRAY_VMESS_AEAD_FORCED=false \
     -v $PWD/db/:/etc/x-ui/ \
     -v $PWD/cert/:/root/cert/ \
+    -v $PWD/acme/:/root/.acme.sh/ \
     --name x-ui --restart=unless-stopped \
-    enwaiax/x-ui
+    enwaiax/x-ui:3x-ui
 ```
 
-Note: If you want to use [FranzKafkaYu/x-ui](https://github.com/FranzKafkaYu/x-ui), change the image as `enwaiax/x-ui:alpha`
+The panel listens on `2053` by default. First-run credentials are `admin` / `admin`; change them after login.
 
-##### Or you could use docker compose to start it
-
+```bash
+docker exec x-ui x-ui setting -show true
 ```
+
+#### docker compose
+
+```bash
 mkdir x-ui && cd x-ui
 wget https://raw.githubusercontent.com/enwaiax/x-ui/main/docker-compose.yml
 docker compose up -d
 ```
 
-#### How to enable ssl to your x-ui panel
+#### Issue a certificate inside the container
 
-This part describe how to enable ssl.
+`network_mode: host` is required so standalone HTTP-01 can bind port 80.
 
-- Suppose your x-ui port is `54321`
-- Suppose your IP is `10.10.10.10`
-- Suppose your domain is `xui.example.com` and you have set the A recode in cloudflare
-- Suppose you are using Debian 10+ or Ubuntu 18+ system
-- Suppose your email is `xxxx@example.com`
+```bash
+docker exec -it x-ui acme.sh --issue -d xui.example.com --standalone --httpport 80
+docker exec -it x-ui acme.sh --installcert -d xui.example.com \
+    --fullchain-file /root/cert/xui.example.com/fullchain.pem \
+    --key-file /root/cert/xui.example.com/privkey.pem \
+    --reloadcmd "x-ui restart"
+docker exec x-ui x-ui cert \
+    -webCert /root/cert/xui.example.com/fullchain.pem \
+    -webCertKey /root/cert/xui.example.com/privkey.pem
+```
 
-##### Steps as below
+`acme.sh` is a symlink created on first start at `/root/.acme.sh/acme.sh`. If the command is not on `PATH`, use that path.
 
-1. Install nginx and python3-certbot-nginx
+#### How to enable SSL with nginx on the host
+
+Assumptions:
+
+- Panel port is `2053`
+- Domain `xui.example.com` already has an A record
+- Debian 12+ or Ubuntu 22+
+- Email `xxxx@example.com`
+
+1. Install nginx and certbot
 
 ```bash
 sudo apt update
-sudo apt install python3-certbot-nginx
+sudo apt install nginx python3-certbot-nginx
 ```
 
-2. Add new nging configurtion
-
-```
-touch /etc/nginx/conf.d/xui.conf
-```
-
-Add below to the file. Adjust appropriately to your own situation.
+2. Create `/etc/nginx/conf.d/xui.conf`
 
 ```nginx
 server {
@@ -120,57 +117,36 @@ server {
 
     location / {
         proxy_redirect off;
-        proxy_pass http://127.0.0.1:54321;
+        proxy_pass http://127.0.0.1:2053;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
     }
 
-    # This part desribe how to reverse websockt proxy
-     location /xray {
-         proxy_redirect off;
-         proxy_pass http://127.0.0.1:10001;
-         proxy_http_version 1.1;
-         proxy_set_header Upgrade $http_upgrade;
-         proxy_set_header Connection "upgrade";
-         proxy_set_header X-Real-IP $remote_addr;
-         proxy_set_header Host $http_host;
-         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-         proxy_set_header Y-Real-IP $realip_remote_addr;
-     }
+    location /xray {
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:10001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Y-Real-IP $realip_remote_addr;
+    }
 }
 ```
 
-3. Check yout conf is OK
+3. Check, issue a cert, and reload
 
-```
-nginx -t
-```
-
-4. Get cert
-
-```
-certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
-```
-
-For more details, refer to [cerbot](https://certbot.eff.org/)
-
-5. Reload nginx config
-
-```
-nginx -s reload
-```
-
-6. Test automatic renewal
-
-```
+```bash
+sudo nginx -t
+sudo certbot --nginx --agree-tos --no-eff-email --email xxxxx@example.com
+sudo nginx -s reload
 sudo certbot renew --dry-run
 ```
 
-Note: Default credentials
-
-Username: `admin`
-
-Password: `admin`
+More details: [certbot](https://certbot.eff.org/)
 
 ## Sponsor
+
 [![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
